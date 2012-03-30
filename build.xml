@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DissetationBD" default="build" basedir=".">
+	
+   <property value="diss" name="name"/>
+   <property value="diss-src" name="srcname"/>
+   <property name="src" location="${basedir}/src"/>
+   <property name="build" location="${basedir}/build"/>
+   <property name="dist"  location="${basedir}/diss"/>
+  
+	<target name="build" depends="clean">
+		<mkdir dir="${build}"/>
+	  
+		<javac destdir="${build}" srcdir="${src}" encoding="UTF-8" debug="true">
+
+		</javac>
+ 
+		<copy todir="${build}">
+   			<fileset dir="${src}" excludes="**/*.java"/>
+		</copy>
+ 		
+		<mkdir dir="${dist}"/>
+ 
+		<jar jarfile="${dist}/${srcname}.jar">
+	   		<fileset dir="${src}" includes="**/*.java"/>
+		</jar>
+
+		<jar jarfile="${dist}/${name}.jar">
+	   		<fileset dir="${build}" includes="**/*.class"/>
+			  <manifest>
+				  <attribute name="Built-By" value="${user.name}"/>
+				  <attribute name="Main-class" value="karpachevski.gui.Client"/>
+				  </manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}"/>
+   		<delete dir="${dist}"/>
+	</target>
+
+</project>
