@@ -16,13 +16,16 @@ import javax.swing.SwingConstants;
 import karpachevski.component.DateField;
 import karpachevski.component.PersonField;
 import karpachevski.model.Document;
+import karpachevski.model.*;
+import javax.swing.*;
+import karpachevski.component.*;
+import java.awt.*;
 
 public class EditDocumentWindow extends EditWindow {
 
 	private Document document;
 	
 	private JTextField titleFld;
-	private JTextField templateOfDocFld;
 	private DateField dateOfSupplyFld;
 	private PersonField listOfSignFld;
 	
@@ -42,7 +45,7 @@ public class EditDocumentWindow extends EditWindow {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(3,3,3,3);
 		
-		String[] properties = {"Название: ", "Шаблон: ", "Дата получения: ", "ФИО визировавших: "};
+		String[] properties = {"Название: ", "Дата получения: ", "ФИО визировавших: "};
 
 		for(int i = 0; i < properties.length; i++) {
 
@@ -54,7 +57,6 @@ public class EditDocumentWindow extends EditWindow {
 		}
 		
 		titleFld = new JTextField(10);
-		templateOfDocFld =  new JTextField(10);
 		dateOfSupplyFld = new DateField();
 		listOfSignFld = new PersonField();
 		
@@ -67,19 +69,14 @@ public class EditDocumentWindow extends EditWindow {
 		c.gridy = 1;
 		c.gridwidth = 3;
 		c.weightx = 1;
-		lblAndFldPanel.add(templateOfDocFld,c);
+		lblAndFldPanel.add(dateOfSupplyFld,c);
 		c.gridx = 1;
 		c.gridy = 2;
 		c.gridwidth = 3;
 		c.weightx = 1;
-		lblAndFldPanel.add(dateOfSupplyFld,c);
-		c.gridx = 1;
-		c.gridy = 3;
-		c.gridwidth = 3;
-		c.weightx = 1;
 		lblAndFldPanel.add(listOfSignFld,c);
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 3;
 		c.gridwidth = 4;
 		c.weightx = 1;
 		lblAndFldPanel.add(new JSeparator(SwingConstants.HORIZONTAL),c);
@@ -89,7 +86,6 @@ public class EditDocumentWindow extends EditWindow {
 	
 	private void fillFields() {
 		titleFld.setText(document.getTitle());
-		templateOfDocFld.setText(document.getTemplateOfDoc());
 		dateOfSupplyFld.setDate(document.getDateOfSupply());
 //		listOfSignFld.setPerson(document.getListOfSign()); 
 	}
@@ -97,7 +93,6 @@ public class EditDocumentWindow extends EditWindow {
 	@Override
 	public Document getObject() {
 		document.setTitle(titleFld.getText());
-		document.setTemplateOfDoc(templateOfDocFld.getText());
 		document.setDateOfSupply(dateOfSupplyFld.getDate());
 //		document.setListOfSsign(listOfSignFld.getPerson()); 
 		

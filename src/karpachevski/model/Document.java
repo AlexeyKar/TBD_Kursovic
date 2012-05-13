@@ -2,6 +2,7 @@ package karpachevski.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.*;
 
 /*
  * Документы
@@ -10,7 +11,6 @@ import java.util.Calendar;
 public class Document extends SuperEntity {
 
 	private String title;  // название документа 
-	private String templateOfDoc; // шаблон документа
 	private Calendar dateOfSupply; // дата получения
 	private ArrayList<Person> listOfSign; // список визировавших
 	
@@ -18,11 +18,10 @@ public class Document extends SuperEntity {
 		super();
 	}
 
-	public Document(String title, String templateOfDoc, Calendar dateOfSupply,
+	public Document(String title, Calendar dateOfSupply,
 			ArrayList<Person> listOfSign) {
 		super();
 		this.title = title;
-		this.templateOfDoc = templateOfDoc;
 		this.dateOfSupply = dateOfSupply;
 		this.listOfSign = listOfSign;
 	}
@@ -33,14 +32,6 @@ public class Document extends SuperEntity {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getTemplateOfDoc() {
-		return templateOfDoc;
-	}
-
-	public void setTemplateOfDoc(String templateOfDoc) {
-		this.templateOfDoc = templateOfDoc;
 	}
 
 	public Calendar getDateOfSupply() {

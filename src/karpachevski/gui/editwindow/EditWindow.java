@@ -14,6 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import karpachevski.model.SuperEntity;
+import javax.swing.*;
+import karpachevski.model.*;
+import java.awt.*;
 
 public abstract class EditWindow extends JDialog {
 	

@@ -4,7 +4,7 @@ import karpachevski.model.Document;
 
 public class DocumentTableModel extends EntityTableModel {
 
-	private final static String[] columnName = {"Название", "Шаблон", "Дата получения", "ФИО Визировавших"};
+	private final static String[] columnName = {"ID", "Название", "Дата получения"};
 	
 	@Override
 	public int getColumnCount() {
@@ -21,8 +21,9 @@ public class DocumentTableModel extends EntityTableModel {
 		try {
 			Document entity = (Document) entityList.get(rowIndex);
 			switch (columnIndex) {
-					case 0:	return entity.getTitle();
-					case 1: return entity.getTemplateOfDoc();
+					case 0:	return entity.getId();
+					case 1:	return entity.getTitle();
+					case 2: return entity.getDateOfSupply();
 				}
 		} catch (Exception e) {
 			return "";

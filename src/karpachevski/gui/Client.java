@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -35,12 +36,18 @@ import karpachevski.tablemodel.DocumentTableModel;
 import karpachevski.tablemodel.EntityTableModel;
 import karpachevski.tablemodel.StudentTableModel;
 import karpachevski.tablemodel.TaskTableModel;
+import karpachevski.connection.ConnectionManager;
 import karpachevski.factory.Factory;
 import karpachevski.gui.editwindow.EditStudentWindow;
 import karpachevski.gui.editwindow.EditTaskWindow;
 import karpachevski.gui.editwindow.EditDocumentWindow;
 import karpachevski.gui.editwindow.EditWindow;
 import karpachevski.gui.loading.LoadingDialog;
+import karpachevski.gui.login.LoginDialog;
+import javax.swing.*;
+import karpachevski.tablemodel.*;
+import karpachevski.model.*;
+import java.awt.*;
 
 public class Client extends JFrame {
 	
@@ -208,13 +215,28 @@ public class Client extends JFrame {
 	}
 	
 	public void connection() {
+		final LoginDialog login = new LoginDialog(this);
+		login.setVisible(true);
+		ConnectionManager.setProperties(login.getUsername(), login.getPassword(), login.getDBName());
+		
 		final LoadingDialog loading = new LoadingDialog(this);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() { 
 			public void run() {
 				loading.setVisible(true);
 			}
 		});
-		getAllLists();		
+		
+		try {
+			getAllLists();	
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e, "Не найден драйвер jdbc для postres", JOptionPane.ERROR_MESSAGE);
+			actionExit();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e, "Ошибка создания БД", JOptionPane.ERROR_MESSAGE);
+			actionExit();
+		}
+		
+	
 		loading.dispose();
 	}
 	
@@ -228,6 +250,9 @@ public class Client extends JFrame {
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд, невозможно добавить аспиранта.", JOptionPane.ERROR_MESSAGE);
 				return;
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			studentTableModel.addEntity(newItem);
 		}
@@ -245,6 +270,9 @@ public class Client extends JFrame {
 					Factory.getInstance().getStudentInterface().update((Student)editWindow.getObject());
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно редактировать аспиранта.", JOptionPane.ERROR_MESSAGE);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				studentTableModel.updateEntity(studentList.getSelectedRow());
 			}
@@ -262,6 +290,10 @@ public class Client extends JFrame {
 				Factory.getInstance().getStudentInterface().delete(selectedStudent);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно удалить аспиранта.", JOptionPane.ERROR_MESSAGE);
+				return;
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			studentTableModel.deleteEntity(studentList.getSelectedRow());
 		}
@@ -278,6 +310,9 @@ public class Client extends JFrame {
 				Factory.getInstance().getTaskInterface().add(newItem);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно добавить задание.", JOptionPane.ERROR_MESSAGE);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			taskTableModel.addEntity(newItem);
 		}
@@ -295,6 +330,9 @@ public class Client extends JFrame {
 					Factory.getInstance().getTaskInterface().update((Task)editWindow.getObject());
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно редактировать задание.", JOptionPane.ERROR_MESSAGE);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				taskTableModel.updateEntity(taskList.getSelectedRow());
 			}
@@ -312,6 +350,10 @@ public class Client extends JFrame {
 				Factory.getInstance().getTaskInterface().delete(selectedTask);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно удалить задание.", JOptionPane.ERROR_MESSAGE);
+				return;
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			taskTableModel.deleteEntity(taskList.getSelectedRow());
 		}
@@ -328,6 +370,9 @@ public class Client extends JFrame {
 				Factory.getInstance().getDocumentInterface().add(newItem);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно добавить документ.", JOptionPane.ERROR_MESSAGE);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			documentTableModel.addEntity(newItem);
 		}
@@ -345,6 +390,9 @@ public class Client extends JFrame {
 					Factory.getInstance().getDocumentInterface().update((Document)editWindow.getObject());
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно редактировать документ.", JOptionPane.ERROR_MESSAGE);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				documentTableModel.updateEntity(documentList.getSelectedRow());
 			}
@@ -362,6 +410,10 @@ public class Client extends JFrame {
 				Factory.getInstance().getDocumentInterface().delete(selectedDocument);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно удалить документ.", JOptionPane.ERROR_MESSAGE);
+				return;
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			documentTableModel.deleteEntity(documentList.getSelectedRow());
 		}
@@ -369,41 +421,34 @@ public class Client extends JFrame {
 			return;
 	}
 	
-	private void getAllLists() {
+	private void getAllLists() throws SQLException, ClassNotFoundException {
 		getStudentList();
 		getTaskList();
 		getDocumentList();
 	}
 	
-	private void getStudentList() {
+	private void getStudentList() throws ClassNotFoundException, SQLException {
 		Object[] studentArray = null;
-		try {
-			studentArray = Factory.getInstance().getStudentInterface().getAll().toArray();
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e, "Невозможно получить список аспирантов", JOptionPane.ERROR_MESSAGE);
-		}
+		studentArray = Factory.getInstance().getStudentInterface().getAll().toArray();
 		studentTableModel.setEntities(studentArray);
 	}
 	
-	private void getTaskList() {
+	private void getTaskList() throws ClassNotFoundException, SQLException {
 		Object[] taskArray = null;
-		try {
-			taskArray =  Factory.getInstance().getTaskInterface().getAll().toArray();
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e, "Невозможно получить список заданий", JOptionPane.ERROR_MESSAGE);
-		}
+		taskArray =  Factory.getInstance().getTaskInterface().getAll().toArray();
 		taskTableModel.setEntities(taskArray);
 	}
 	
-	private void getDocumentList() {
+	private void getDocumentList() throws ClassNotFoundException, SQLException {
 		Object[] documentArray = null;
-		try {
-			documentArray = Factory.getInstance().getDocumentInterface().getAll().toArray();
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e, "Невозможно получить список документов.", JOptionPane.ERROR_MESSAGE);
-		}
+		documentArray = Factory.getInstance().getDocumentInterface().getAll().toArray();
 		documentTableModel.setEntities(documentArray);
 	}
+	
+	//private void getStatusList() throws ClassNotFoundException, SQLException {
+	//	Object[] statusArray = null;
+	//	statusArray = Factory.getInstance().getStatusInterface().getAll().toArray();
+	//}
 	
 	private void updateButtons() {
 		selectedItem = null;
@@ -434,6 +479,11 @@ public class Client extends JFrame {
 	}
 	
 	private void actionExit() {
+		try {
+			ConnectionManager.closeConnection();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e, "Ошибка при закрытие соединения с БД", JOptionPane.ERROR_MESSAGE);
+		}
 		System.exit(0);
 	}
 	

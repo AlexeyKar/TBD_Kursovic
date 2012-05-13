@@ -4,6 +4,7 @@ import karpachevski.interfaces.SuperEntityInterface;
 import karpachevski.interfaces.impl.StudentInterfaceImpl;
 import karpachevski.interfaces.impl.TaskInterfaceImpl;
 import karpachevski.interfaces.impl.DocumentInterfaceImpl;
+import karpachevski.interfaces.*;
 
 public class Factory {
 

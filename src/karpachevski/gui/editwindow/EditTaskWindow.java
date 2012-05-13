@@ -19,6 +19,11 @@ import javax.swing.SwingConstants;
 import karpachevski.component.DateField;
 import karpachevski.model.Document;
 import karpachevski.model.Task;
+import karpachevski.model.*;
+import java.util.*;
+import javax.swing.*;
+import karpachevski.component.*;
+import java.awt.*;
 
 public class EditTaskWindow extends EditWindow {
 

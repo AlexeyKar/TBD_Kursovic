@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import karpachevski.model.Person;
+import javax.swing.*;
+import karpachevski.model.*;
 
 public class PersonField extends JPanel {
 	private JTextField nameFld;

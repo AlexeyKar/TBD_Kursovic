@@ -19,6 +19,11 @@ import javax.swing.SwingConstants;
 import karpachevski.component.DateField;
 import karpachevski.component.PersonField;
 import karpachevski.model.Student;
+import karpachevski.model.*;
+import java.util.*;
+import javax.swing.*;
+import karpachevski.component.*;
+import java.awt.*;
 
 public class EditStudentWindow extends EditWindow {
 
@@ -155,7 +160,7 @@ public class EditStudentWindow extends EditWindow {
 		dateOfPlanDissFld.setDate(student.getDateOfPlanDiss());
 		dateOfFactDissFld.setDate(student.getDateOfFactDiss());
 	//	taskFld.setSelectedItem(student.getTasks());              // пока выдает весь список в одну ячейку!!!
-		nameOfDissFld.setText(student.getName());
+		nameOfDissFld.setText(student.getNameOfDiss());
 		codeOfDissFld.setText(student.getCodeOfDiss());
 		supervisorFld.setPerson(student.getSupervisor());;
 	//	opponentsFld.setPerson(student.getOpponents());          // пока выдает весь список в одну ячейку!!!

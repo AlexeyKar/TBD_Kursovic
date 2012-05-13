@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import karpachevski.model.SuperEntity;
+import javax.swing.table.*;
+import java.util.*;
+import karpachevski.model.*;
 
 public abstract class EntityTableModel extends AbstractTableModel {
 
