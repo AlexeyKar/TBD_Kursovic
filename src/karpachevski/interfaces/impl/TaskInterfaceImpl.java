@@ -22,12 +22,46 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 
 	@Override
 	public void add(SuperEntity task) throws SQLException, ClassNotFoundException {
-		// В разработке
+		Task tsk = (Task) task;
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		ResultSet results = statement.executeQuery("INSERT INTO task (title, dateofstartplan, dateofstartfact, " 
+				+ "dateoffinishplan, dateoffinishfact, durration, complishion, document_id) values('" 
+				+ tsk.getTitle() + "', '" + tsk.getDateOfStartPlan().getTime() + "', '" 
+				+ tsk.getDateOfStartFact().getTime() + "', '" + tsk.getDateOfFinishPlan().getTime() + "', '" 
+				+ tsk.getDateOfFinishFact().getTime() + "', '" + tsk.getDurration() + "', '" 
+				+ tsk.getComplishion() + "', '" + tsk.getDocument().getId() 
+				+ "') RETURNING task_id");
+		results.next();
+		task.setId(results.getLong(1));
+		statement.close();
+		statement = null;
 	}
 
 	@Override
 	public void update(SuperEntity task) throws SQLException, ClassNotFoundException {
-		// В разработке
+		Task tsk = (Task) task;
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		statement.executeUpdate("UPDATE task SET title = '" + tsk.getTitle() 
+				+ "', dateofstartplan = '" + tsk.getDateOfStartPlan().getTime() 
+				+ "', dateofstartfact = '" + tsk.getDateOfStartFact().getTime()
+				+ "', dateoffinishplan = '" + tsk.getDateOfFinishPlan().getTime() 
+				+ "', dateoffinishfact = '" + tsk.getDateOfFinishFact().getTime()
+				+ "', durration = '" + tsk.getDurration()
+				+ "', complishion = '" + tsk.getComplishion()
+				+ "', document_id = '" + tsk.getDocument().getId()
+				+ "' " 
+				+ "WHERE task_id =" + tsk.getId());
+
+		statement.close();
+		statement = null;
 	}
 
 	@Override
@@ -58,17 +92,34 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 				"task.dateoffinishfact, task.durration, task.complishion, " +
 				"document.document_id, document.name " +
 				"FROM public.task, public.document " +
-				"WHERE task.document_id = document.document_id;");
+				"WHERE task.document_id = document.document_id order by task.task_id ");
 		ResultSetMetaData rsmd = results.getMetaData();
 		while(results.next())
 		{
 			Task tmp = new Task();
 			tmp.setId(results.getLong(1));
 			tmp.setTitle(results.getString(2));
-			//tmp. dateOfStartPlan; // планируемое время окончания задачи
-			//private Calendar dateOfStartFact; // фактическое время начала задачи
-			//private Calendar dateOfFinishPlan; // планируемое время окончания задачи
-			//private Calendar dateOfFinishFact; // фактическое время окончания задачи
+			
+			java.sql.Date date = results.getDate(3);
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(date);
+			tmp.setDateOfStartPlan(cal1);
+			
+			date = results.getDate(4);
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(date);
+			tmp.setDateOfStartFact(cal2);
+			
+			date = results.getDate(5);
+			Calendar cal3 = Calendar.getInstance();
+			cal3.setTime(date);
+			tmp.setDateOfFinishPlan(cal3);
+			
+			date = results.getDate(6);
+			Calendar cal4 = Calendar.getInstance();
+			cal4.setTime(date);
+			tmp.setDateOfFinishFact(cal4);
+			
 			tmp.setDurration(results.getInt(7)); // планируемая продолжительность
 			tmp.setComplishion(results.getInt(8)); // процент выполения задачи
 			Document tmpDoc = new Document();
@@ -77,6 +128,7 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 			tmp.setDocument(tmpDoc); // документ подтверждающий выполнение
 			
 			tasks.add(tmp);
+
 		}
 		results.close();
 
@@ -85,6 +137,13 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 
 		
 		return tasks; 
+	}
+
+	@Override
+	public Collection getListForEntity(SuperEntity obj) throws SQLException,
+			ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -10,6 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -58,6 +59,9 @@ public class Client extends JFrame {
 	private JTable studentList;
 	private JTable taskList;
 	private JTable documentList;
+	
+	private Collection personArray;
+	private Collection statusArray;
 	
 	private static final int STUDENTS = 0;
 	private static final int TASKS = 1;
@@ -241,7 +245,7 @@ public class Client extends JFrame {
 	}
 	
 	private void actionAddStudent() {
-		EditWindow editWindow = new EditStudentWindow(this, new Student(), taskTableModel.getEntities());
+		EditWindow editWindow = new EditStudentWindow(this, new Student(), taskTableModel.getEntities(), statusArray, personArray);
 		editWindow.setVisible(true);
 		if (!editWindow.isCanceled()) {
 			Student newItem = (Student)editWindow.getObject();
@@ -263,7 +267,7 @@ public class Client extends JFrame {
 	private void actionEditStudent() {
 		Student selectedStudent = (Student)studentTableModel.getEntity(studentList.getSelectedRow());
 		if (selectedStudent != null) {
-			EditWindow editWindow = new EditStudentWindow(this, selectedStudent, taskTableModel.getEntities());
+			EditWindow editWindow = new EditStudentWindow(this, selectedStudent, taskTableModel.getEntities(), statusArray, personArray);
 			editWindow.setVisible(true);
 			if (!editWindow.isCanceled()) {
 				try {
@@ -362,7 +366,7 @@ public class Client extends JFrame {
 	}
 	
 	private void actionAddDocument() {
-		EditWindow editWindow = new EditDocumentWindow(this, new Document());
+		EditWindow editWindow = new EditDocumentWindow(this, new Document(), personArray);
 		editWindow.setVisible(true);
 		if (!editWindow.isCanceled()) {
 			Document newItem = (Document)editWindow.getObject();
@@ -382,8 +386,17 @@ public class Client extends JFrame {
 	
 	private void actionEditDocument() {
 		Document selectedDocument = (Document) documentTableModel.getEntity(documentList.getSelectedRow());
+		try {
+			selectedDocument.setListOfSign(Factory.getInstance().getDocumentInterface().getListForEntity(selectedDocument));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (selectedDocument != null) {
-			EditWindow editWindow = new EditDocumentWindow(this, selectedDocument);
+			EditWindow editWindow = new EditDocumentWindow(this, selectedDocument, personArray);
 			editWindow.setVisible(true);
 			if (!editWindow.isCanceled()) {
 				try {
@@ -425,6 +438,8 @@ public class Client extends JFrame {
 		getStudentList();
 		getTaskList();
 		getDocumentList();
+		getPersonList();
+		getStatusList();
 	}
 	
 	private void getStudentList() throws ClassNotFoundException, SQLException {
@@ -445,10 +460,15 @@ public class Client extends JFrame {
 		documentTableModel.setEntities(documentArray);
 	}
 	
-	//private void getStatusList() throws ClassNotFoundException, SQLException {
-	//	Object[] statusArray = null;
-	//	statusArray = Factory.getInstance().getStatusInterface().getAll().toArray();
-	//}
+	private void getPersonList() throws ClassNotFoundException, SQLException {
+		personArray = null;
+		personArray = Factory.getInstance().getPersonInterface().getAll();
+	}
+	
+	private void getStatusList() throws ClassNotFoundException, SQLException {
+		statusArray = null;
+		statusArray = Factory.getInstance().getStatusInterface().getAll();
+	}
 	
 	private void updateButtons() {
 		selectedItem = null;
@@ -459,19 +479,10 @@ public class Client extends JFrame {
 		}
 
 		if (selectedItem != null) {
-			if  (selectedItem.getId() != 1) 
-			{
-				addBtn.setEnabled(true);
-				editBtn.setEnabled(true);
-				deleteBtn.setEnabled(true);
-			}
-			else {
-				addBtn.setEnabled(true);
-				editBtn.setEnabled(true);
-				deleteBtn.setEnabled(false);
-			}
-		}
-		else {
+			addBtn.setEnabled(true);
+			editBtn.setEnabled(true);
+			deleteBtn.setEnabled(true);
+		} else {
 			addBtn.setEnabled(true);
 			editBtn.setEnabled(false);
 			deleteBtn.setEnabled(false);

@@ -5,9 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Calendar;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.*;
 import java.util.*;
 
@@ -64,16 +61,21 @@ public class DateField extends JPanel {
 	}
 	
 	public void setDate(Calendar calendar) {
-		dayFld.setValue(calendar.DAY_OF_MONTH);
-		monthFld.setValue(calendar.MONTH);
-		yearFld.setValue(calendar.YEAR);
+
+		if (calendar != null) {
+			dayFld.setValue(calendar.get(Calendar.DAY_OF_MONTH));
+			monthFld.setValue(calendar.get(Calendar.MONTH));
+			yearFld.setValue(calendar.get(Calendar.YEAR));
+		} else {
+			dayFld.setValue(1);
+			monthFld.setValue(1);
+			yearFld.setValue(1950);
+		}
 	}
 	
 	public Calendar getDate() {
 		Calendar date = Calendar.getInstance();
-		date.set(Calendar.DAY_OF_MONTH, (Integer)dayFld.getValue());
-		date.set(Calendar.MONTH, (Integer)monthFld.getValue());
-		date.set(Calendar.YEAR, (Integer)yearFld.getValue());
+		date.set((Integer)yearFld.getValue(), (Integer)monthFld.getValue(), (Integer)dayFld.getValue());
 		return date;
 	}
 	

@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Student extends Person {
 
-	private String status;  // статус
+	private Status status;  // статус
 	private Calendar dateOfAdmission; // дата поступления
 	private Calendar dateOfPlanDiss; // планируемая дата защиты 
 	private Calendar dateOfFactDiss; // дата фактической защиты
@@ -26,7 +26,7 @@ public class Student extends Person {
 	}
 	
 	public Student(String name, String surname, String middleName, 
-			String status, Calendar dateOfAdmission, Calendar dateOfPlanDiss, 
+			Status status, Calendar dateOfAdmission, Calendar dateOfPlanDiss, 
 			Calendar dateOfFactDiss, ArrayList<Task> tasks, String nameOfDiss, 
 			String codeOfDiss, Person supervisor, ArrayList<Person> opponents, String organization) {
 		
@@ -43,11 +43,11 @@ public class Student extends Person {
 		this.organization = organization; 
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 

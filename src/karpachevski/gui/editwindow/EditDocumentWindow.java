@@ -15,24 +15,27 @@ import javax.swing.SwingConstants;
 
 import karpachevski.component.DateField;
 import karpachevski.component.PersonField;
-import karpachevski.model.Document;
 import karpachevski.model.*;
 import javax.swing.*;
 import karpachevski.component.*;
 import java.awt.*;
+import java.util.Collection;
 
 public class EditDocumentWindow extends EditWindow {
 
 	private Document document;
 	
+	private Collection personList;
+	
 	private JTextField titleFld;
 	private DateField dateOfSupplyFld;
 	private PersonField listOfSignFld;
+
 	
-	
-	public EditDocumentWindow(JFrame parent, Document document) {
+	public EditDocumentWindow(JFrame parent, Document document, Collection personList) {
 		super(parent);
 		this.document = document;
+		this.personList = personList;
 		addComponentsToPane(getContentPane());
 		fillFields();
 		pack();
@@ -58,7 +61,7 @@ public class EditDocumentWindow extends EditWindow {
 		
 		titleFld = new JTextField(10);
 		dateOfSupplyFld = new DateField();
-		listOfSignFld = new PersonField();
+		listOfSignFld = new PersonField(false, personList);
 		
 		c.gridx = 1;
 		c.gridy = 0;
@@ -87,14 +90,14 @@ public class EditDocumentWindow extends EditWindow {
 	private void fillFields() {
 		titleFld.setText(document.getTitle());
 		dateOfSupplyFld.setDate(document.getDateOfSupply());
-//		listOfSignFld.setPerson(document.getListOfSign()); 
+		listOfSignFld.setPersons(document.getListOfSign());
 	}
 	
 	@Override
 	public Document getObject() {
 		document.setTitle(titleFld.getText());
 		document.setDateOfSupply(dateOfSupplyFld.getDate());
-//		document.setListOfSsign(listOfSignFld.getPerson()); 
+		document.setListOfSign(listOfSignFld.getPersons()); 
 		
 		return document;
 	}

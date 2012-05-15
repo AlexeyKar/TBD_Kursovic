@@ -29,6 +29,8 @@ public class EditStudentWindow extends EditWindow {
 
 	private Student student;
 	private Collection taskList;
+	private Collection statusList;
+	private Collection personList;
 	
 	private JTextField nameFld;
 	private JTextField surnameFld;
@@ -45,10 +47,11 @@ public class EditStudentWindow extends EditWindow {
 	private JTextField organizationFld;
 
 	
-	public EditStudentWindow(JFrame parent, Student student, Collection taskList) {
+	public EditStudentWindow(JFrame parent, Student student, Collection taskList, Collection statusList, Collection personList) {
 		super(parent);
 		this.student = student;
 		this.taskList = taskList;
+		this.statusList = statusList;
 		addComponentsToPane(getContentPane());
 		fillFields();
 		pack();
@@ -78,15 +81,15 @@ public class EditStudentWindow extends EditWindow {
 		nameFld = new JTextField(10);
 		surnameFld = new JTextField(10);
 		middleNameFld = new JTextField(10);
-		statusFld = new JComboBox();
+		statusFld = new JComboBox(statusList.toArray());
 		dateOfAdmissionFld = new DateField();
 		dateOfPlanDissFld = new DateField();
 		dateOfFactDissFld = new DateField();
 		taskFld = new JComboBox(taskList.toArray());
 		nameOfDissFld = new JTextField();
 		codeOfDissFld = new JTextField();
-		supervisorFld = new PersonField();
-		opponentsFld = new PersonField();
+		supervisorFld = new PersonField(true, personList);
+		opponentsFld = new PersonField(false, personList);
 		organizationFld = new JTextField();
 		
 		
@@ -173,7 +176,7 @@ public class EditStudentWindow extends EditWindow {
 		student.setSurname(surnameFld.getText());
 		student.setMiddleName(middleNameFld.getText());
 		
-		student.setStatus((String)statusFld.getSelectedItem());
+		student.setStatus((Status)statusFld.getSelectedItem());
 		student.setDateOfAdmission(dateOfAdmissionFld.getDate());
 		student.setDateOfPlanDiss(dateOfPlanDissFld.getDate());
 		student.setDateOfFactDiss(dateOfFactDissFld.getDate());

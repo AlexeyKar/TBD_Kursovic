@@ -12,7 +12,7 @@ public class Document extends SuperEntity {
 
 	private String title;  // название документа 
 	private Calendar dateOfSupply; // дата получения
-	private ArrayList<Person> listOfSign; // список визировавших
+	private Collection listOfSign; // список визировавших
 	
 	public Document() {
 		super();
@@ -42,11 +42,11 @@ public class Document extends SuperEntity {
 		this.dateOfSupply = dateOfSupply;
 	}
 
-	public ArrayList<Person> getListOfSign() {
+	public Collection getListOfSign() {
 		return listOfSign;
 	}
 
-	public void setListOfSign(ArrayList<Person> listOfSign) {
+	public void setListOfSign(Collection listOfSign) {
 		this.listOfSign = listOfSign;
 	}
 	

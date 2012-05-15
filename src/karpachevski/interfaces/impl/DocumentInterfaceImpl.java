@@ -19,12 +19,55 @@ public class DocumentInterfaceImpl implements SuperEntityInterface {
 
 	@Override
 	public void add(SuperEntity document) throws SQLException, ClassNotFoundException {
-		// В разработке
+		Document doc = (Document) document;
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		ResultSet results = statement.executeQuery("INSERT INTO document (name, dateOfSupply) values('" 
+				+ doc.getTitle() + "', '" + doc.getDateOfSupply().getTime() 
+				+ "') RETURNING document_id");
+		results.next();
+		document.setId(results.getLong(1));
+		
+		Collection persons = doc.getListOfSign();
+		for (Object item : persons) {
+			Person person = (Person) item;
+			if (person.getId() == -1) {
+				results = statement.executeQuery("INSERT INTO cleverpeople (name, surname, middlename) values('" 
+						+ person.getName() + "', '" + person.getSurname() + "', '" + person.getMiddleName()
+						+ "') RETURNING cleverpeople_id ");
+				results.next();
+				person.setId(results.getLong(1));
+			}
+			
+			statement.executeUpdate("INSERT INTO document_cleverpeople values('" 
+					+ document.getId() + "', '" + person.getId() 
+					+ "')");
+			
+		}
+
+		results.close();
+		
+		statement.close();
+		statement = null;
 	}
 
 	@Override
 	public void update(SuperEntity document) throws SQLException, ClassNotFoundException {
-		// В разработке
+		Document doc = (Document) document;
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		statement.executeUpdate("UPDATE document SET name = '" + doc.getTitle() + "', dateOfSupply = '" 
+				+ doc.getDateOfSupply().getTime() 
+				+ "' " + "WHERE  document_id = " + doc.getId());
+
+		statement.close();
+		statement = null;
 	}
 
 	@Override
@@ -50,14 +93,19 @@ public class DocumentInterfaceImpl implements SuperEntityInterface {
 
 		Statement statement = connection.createStatement();
 
-		ResultSet results = statement.executeQuery("select * from document");
+		ResultSet results = statement.executeQuery("select * from document order by document_id");
 		ResultSetMetaData rsmd = results.getMetaData();
 		while(results.next())
 		{
 			Document tmp = new Document();
 			tmp.setId(results.getLong(1));
 			tmp.setTitle(results.getString(2));
-			//tmp.setDateOfSupply(results.getDate(3));
+			
+			java.sql.Date date = (java.sql.Date) results.getDate(3);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			tmp.setDateOfSupply(calendar);
+
 			documents.add(tmp);
 		}
 		results.close();
@@ -66,6 +114,39 @@ public class DocumentInterfaceImpl implements SuperEntityInterface {
 		statement = null;
 
 		return documents; 
+	}
+
+	public Collection getListForEntity(SuperEntity document) throws ClassNotFoundException, SQLException {
+		Collection persons = null;
+		persons = new ArrayList();
+		
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		ResultSet results = statement.executeQuery("select cleverpeople.cleverpeople_id, cleverpeople.name, " +
+						"cleverpeople.surname, cleverpeople.middlename " +
+						"FROM cleverpeople RIGHT JOIN document_cleverpeople " +
+						"ON document_cleverpeople.cleverpeople_id = cleverpeople.cleverpeople_id " +
+						"WHERE document_id = " + document.getId());
+		ResultSetMetaData rsmd = results.getMetaData();
+		while(results.next())
+		{
+			Person tmp = new Person();
+			tmp.setId(results.getLong(1));
+			tmp.setName(results.getString(2));
+			tmp.setSurname(results.getString(3));
+			tmp.setMiddleName(results.getString(4));
+
+			persons.add(tmp);
+		}
+		results.close();
+
+		statement.close();
+		statement = null;
+		
+		return persons;
 	}
 
 }

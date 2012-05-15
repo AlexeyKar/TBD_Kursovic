@@ -13,5 +13,6 @@ public interface SuperEntityInterface {
 	public void update(SuperEntity obj) throws SQLException, ClassNotFoundException;
 	public void delete(SuperEntity obj) throws SQLException, ClassNotFoundException;
 	public Collection getAll() throws SQLException, ClassNotFoundException;
+	public Collection getListForEntity(SuperEntity obj) throws SQLException, ClassNotFoundException;
 
 }
