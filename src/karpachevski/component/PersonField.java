@@ -12,19 +12,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import karpachevski.model.Person;
-import karpachevski.model.SuperEntity;
+
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import karpachevski.model.*;
 import karpachevski.tablemodel.PersonTableModel;
-import karpachevski.tablemodel.TaskTableModel;
 
 public class PersonField extends JPanel {
 	
@@ -32,11 +29,11 @@ public class PersonField extends JPanel {
 	private PersonTableModel personTableModel;
 	private JTable personList;
 	private JButton delBtn;
-	private Collection personArray;
+	private Collection personArr;
 	
 	public PersonField(Boolean single, Collection personArray) {
 
-		this.personArray = personArray;
+		this.personArr = personArray;
 		
 		GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints c = new GridBagConstraints();
@@ -53,12 +50,12 @@ public class PersonField extends JPanel {
 		JLabel surnameLbl = new JLabel(properties[1]);
 		JLabel middleNameLbl = new JLabel(properties[2]);
 
-		if (personArray != null) {
-			fioFld = new JComboBox(personArray.toArray());
+		if (personArr != null) {
+			fioFld = new JComboBox(personArr.toArray());
 		}
 			else
 				fioFld = new JComboBox();
-		fioFld.setEditable(true);
+		
 		
 
 		c.gridx = 0;
@@ -79,40 +76,13 @@ public class PersonField extends JPanel {
 		add(fioFld,c);
 		
 		if (!single) {
+			fioFld.setEditable(true);
 			JButton addBtn = new JButton("+");
 			addBtn.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-//					JLabel lbl = new JLabel(fioFld.getSelectedItem().toString());
-//					JButton btn = new JButton("-");
-//					c.gridx = 0;
-//					c.gridy = 2;
-//					c.gridwidth = 3;
-//					add(lbl,c);
-//					c.gridx = 4;
-//					c.gridy = 2;
-//					c.gridwidth = 1;
-//					add(btn,c);
 					personTableModel.addEntity(getPerson());	
-//					try {
-//							if (fioFld.getSelectedItem().getClass().equals(Class.forName("karpachevski.model.Person"))) {
-//								personTableModel.addEntity((Person)fioFld.getSelectedItem());
-//							}
-//							else  {
-//								String[] str = fioFld.getSelectedItem().toString().split(" ");
-//							
-//								personTableModel.addEntity(new Person(str[0],str[1],str[2]));
-//							}
-//						} catch (ClassNotFoundException e1) {
-//							// TODO Auto-generated catch block
-//							e1.printStackTrace();
-//						}
-
-					//personTableModel.addEntity(new Person(fioFld.getSelectedItem().toString(),"", ""));
-					//fioFld.setSelectedItem("");
-					
-
 				}
 				
 			});
@@ -135,7 +105,6 @@ public class PersonField extends JPanel {
 			});
 			
 			JScrollPane personView = new JScrollPane(personList);
-			//personList.setSize(15, 15);
 
 			personList.setPreferredScrollableViewportSize(
 			         new Dimension(
@@ -157,16 +126,7 @@ public class PersonField extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-//					JLabel lbl = new JLabel(fioFld.getSelectedItem().toString());
-//					JButton btn = new JButton("-");
-//					c.gridx = 0;
-//					c.gridy = 2;
-//					c.gridwidth = 3;
-//					add(lbl,c);
-//					c.gridx = 4;
-//					c.gridy = 2;
-//					c.gridwidth = 1;
-//					add(btn,c);
+
 					personTableModel.deleteEntity(personList.getSelectedRow());
 
 				}
@@ -185,19 +145,7 @@ public class PersonField extends JPanel {
 
 
 		
-//		//c.gridwidth = 1;
-//		//c.weightx = 1;
-//	//	add(dayFld,c);
-//	//	c.gridx = 1;
-//		c.gridy = 0;
-//		//c.gridwidth = 1;
-//		//c.weightx = 1;
-//		add(monthFld,c);
-//		c.gridx = 2;
-//		c.gridy = 0;
-//		//c.gridwidth = 1;
-//		//c.weightx = 1;
-//		add(yearFld,c);
+
 	}
 	
 	private void updateButtons() {
@@ -209,11 +157,7 @@ public class PersonField extends JPanel {
 	
 	public void setPerson(Person person) {
 		if (person != null) {
-//		nameFld.setText(person.getName());
-//		surnameFld.setText(person.getSurname());
-//		middleNameFld.setText(person.getMiddleName());
 			fioFld.setSelectedItem(person);
-			
 		}
 	}
 	

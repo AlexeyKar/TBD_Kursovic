@@ -77,10 +77,48 @@ public class PersonInterfaceImpl implements SuperEntityInterface {
 	}
 
 	@Override
-	public Collection getListForEntity(SuperEntity obj) throws SQLException,
-			ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection getListForEntity(SuperEntity obj) throws SQLException, ClassNotFoundException {
+		Collection persons = null;
+		persons = new ArrayList();
+		
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		ResultSet results = null;		
+		if (obj.getClass().equals(Class.forName("karpachevski.model.Document"))) {
+			results = statement.executeQuery("select cleverpeople.cleverpeople_id, cleverpeople.name, " +
+							"cleverpeople.surname, cleverpeople.middlename " +
+							"FROM cleverpeople RIGHT JOIN document_cleverpeople " +
+							"ON document_cleverpeople.cleverpeople_id = cleverpeople.cleverpeople_id " +
+							"WHERE document_id = " + obj.getId());
+		} else 
+			if (obj.getClass().equals(Class.forName("karpachevski.model.Student"))) {
+				results = statement.executeQuery("select cleverpeople.cleverpeople_id, cleverpeople.name, " +
+						"cleverpeople.surname, cleverpeople.middlename " +
+						"FROM cleverpeople RIGHT JOIN student_cleverpeople " +
+						"ON student_cleverpeople.cleverpeople_id = cleverpeople.cleverpeople_id " +
+						"WHERE student_cleverpeople.student_id = " + obj.getId());
+			}
+				
+		ResultSetMetaData rsmd = results.getMetaData();
+		while(results.next())
+		{
+			Person tmp = new Person();
+			tmp.setId(results.getLong(1));
+			tmp.setName(results.getString(2));
+			tmp.setSurname(results.getString(3));
+			tmp.setMiddleName(results.getString(4));
+
+			persons.add(tmp);
+		}
+		results.close();
+
+		statement.close();
+		statement = null;
+		
+		return persons;
 	}
 	
 }

@@ -18,7 +18,6 @@ import javax.swing.SwingConstants;
 
 import karpachevski.component.DateField;
 import karpachevski.component.PersonField;
-import karpachevski.model.Student;
 import karpachevski.model.*;
 import java.util.*;
 import javax.swing.*;
@@ -39,7 +38,7 @@ public class EditStudentWindow extends EditWindow {
 	private DateField dateOfAdmissionFld;
 	private DateField dateOfPlanDissFld;
 	private DateField dateOfFactDissFld;
-	private JComboBox taskFld;
+	private TaskField taskFld;
 	private JTextField nameOfDissFld;
 	private JTextField codeOfDissFld;
 	private PersonField supervisorFld;
@@ -52,6 +51,7 @@ public class EditStudentWindow extends EditWindow {
 		this.student = student;
 		this.taskList = taskList;
 		this.statusList = statusList;
+		this.personList = personList;
 		addComponentsToPane(getContentPane());
 		fillFields();
 		pack();
@@ -82,10 +82,11 @@ public class EditStudentWindow extends EditWindow {
 		surnameFld = new JTextField(10);
 		middleNameFld = new JTextField(10);
 		statusFld = new JComboBox(statusList.toArray());
+		statusFld.setEditable(true);
 		dateOfAdmissionFld = new DateField();
 		dateOfPlanDissFld = new DateField();
 		dateOfFactDissFld = new DateField();
-		taskFld = new JComboBox(taskList.toArray());
+		taskFld = new TaskField(taskList);
 		nameOfDissFld = new JTextField();
 		codeOfDissFld = new JTextField();
 		supervisorFld = new PersonField(true, personList);
@@ -162,11 +163,11 @@ public class EditStudentWindow extends EditWindow {
 		dateOfAdmissionFld.setDate(student.getDateOfAdmission());
 		dateOfPlanDissFld.setDate(student.getDateOfPlanDiss());
 		dateOfFactDissFld.setDate(student.getDateOfFactDiss());
-	//	taskFld.setSelectedItem(student.getTasks());              // пока выдает весь список в одну ячейку!!!
+		taskFld.setTasks(student.getTasks());              
 		nameOfDissFld.setText(student.getNameOfDiss());
 		codeOfDissFld.setText(student.getCodeOfDiss());
 		supervisorFld.setPerson(student.getSupervisor());;
-	//	opponentsFld.setPerson(student.getOpponents());          // пока выдает весь список в одну ячейку!!!
+		opponentsFld.setPersons(student.getOpponents());         
 		organizationFld.setText(student.getOrganization());
 	}
 	
@@ -176,15 +177,25 @@ public class EditStudentWindow extends EditWindow {
 		student.setSurname(surnameFld.getText());
 		student.setMiddleName(middleNameFld.getText());
 		
-		student.setStatus((Status)statusFld.getSelectedItem());
+		try {
+			if (statusFld.getSelectedItem().getClass().equals(Class.forName("karpachevski.model.Status"))) {
+				student.setStatus((Status)statusFld.getSelectedItem());
+			} 
+			else {
+				student.setStatus(new Status(statusFld.getSelectedItem().toString()));
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		student.setDateOfAdmission(dateOfAdmissionFld.getDate());
 		student.setDateOfPlanDiss(dateOfPlanDissFld.getDate());
 		student.setDateOfFactDiss(dateOfFactDissFld.getDate());
-//		student.setTask((Task)taskFld.getSelectedItem());              // пока выдает весь список в одну ячейку!!!
+		student.setTasks(taskFld.getTasks());              
 		student.setNameOfDiss(nameOfDissFld.getText());
 		student.setCodeOfDiss(codeOfDissFld.getText());
 		student.setSupervisor(supervisorFld.getPerson());
-//		student.setOpponents(opponentsFld.getPerson());          // пока выдает весь список в одну ячейку!!!
+		student.setOpponents(opponentsFld.getPersons());          
 		student.setOrganization(organizationFld.getText());
 		
 		return student;

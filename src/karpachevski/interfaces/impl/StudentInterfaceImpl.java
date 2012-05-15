@@ -32,7 +32,18 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 
 		Statement statement = connection.createStatement();
 		
-		ResultSet results = statement.executeQuery("INSERT INTO student (name, surname, middlename, " +
+		ResultSet results = null;
+		
+		Status status = stud.getStatus();
+		if (status.getId() == -1) {
+			results = statement.executeQuery("INSERT INTO status (name) values('" 
+					+ status.getName()
+					+ "') RETURNING status_id ");
+			results.next();
+			status.setId(results.getLong(1));
+		}
+		
+		results = statement.executeQuery("INSERT INTO student (name, surname, middlename, " +
 				"status_id, dateOfAdmission, dateOfPlanDiss, " +
 				"dateOfFactDiss, nameOfDiss, codeOfDiss, cleverpeople_id, " +
 				"organization) values('" + stud.getName() + "', '" + stud.getSurname() + "', '" 
@@ -43,6 +54,34 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 				+ stud.getOrganization() + "') RETURNING student_id");
 		results.next();
 		stud.setId(results.getLong(1));
+		
+		Collection persons = stud.getOpponents();
+		for (Object item : persons) {
+			Person person = (Person) item;
+			if (person.getId() == -1) {
+				results = statement.executeQuery("INSERT INTO cleverpeople (name, surname, middlename) values('" 
+						+ person.getName() + "', '" + person.getSurname() + "', '" + person.getMiddleName()
+						+ "') RETURNING cleverpeople_id ");
+				results.next();
+				person.setId(results.getLong(1));
+			}
+			
+			statement.executeUpdate("INSERT INTO student_cleverpeople values('" 
+					+ stud.getId() + "', '" + person.getId() 
+					+ "')");
+			
+		}
+		
+		Collection tasks = stud.getTasks();
+		for (Object item : tasks) {
+			Task task = (Task) item;
+			statement.executeUpdate("INSERT INTO student_task values('" 
+					+ stud.getId() + "', '" + task.getId() 
+					+ "')");
+		}
+		
+		
+		
 		statement.close();
 		statement = null;		
 	}
@@ -54,6 +93,15 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 		connection = ConnectionManager.getConnection();
 
 		Statement statement = connection.createStatement();
+
+		Status status = stud.getStatus();
+		if (status.getId() == -1) {
+			ResultSet results = statement.executeQuery("INSERT INTO status (name) values('" 
+					+ status.getName()
+					+ "') RETURNING status_id ");
+			results.next();
+			status.setId(results.getLong(1));
+		}
 		
 		statement.executeUpdate("UPDATE student SET name = '" + stud.getName() 
 				+ "', surname = '" + stud.getSurname()
@@ -68,6 +116,29 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 				+ "', organization = '" + stud.getOrganization()
 				+ "' " 
 				+ "WHERE student_id =" + stud.getId());
+		
+		statement.executeUpdate("DELETE FROM student_task WHERE student_task.student_id = " + stud.getId());
+		statement.executeUpdate("DELETE FROM student_cleverpeople WHERE student_cleverpeople.student_id = " + stud.getId());
+		
+		
+		Collection tasks = stud.getTasks();
+		for (Object item : tasks) {
+		Task task = (Task) item;
+		statement.executeUpdate("INSERT INTO student_task values('" 
+				+ stud.getId() + "', '" + task.getId() 
+				+ "')");
+		
+		}
+		
+		Collection persons = stud.getOpponents();
+		for (Object item : persons) {
+		Person person = (Person) item;
+		statement.executeUpdate("INSERT INTO student_cleverpeople values('" 
+				+ student.getId() + "', '" + person.getId() 
+				+ "')");
+		
+		}
+		
 		
 		statement.close();
 		statement = null;

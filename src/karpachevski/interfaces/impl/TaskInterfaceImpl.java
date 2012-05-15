@@ -12,6 +12,7 @@ import java.util.Collection;
 import karpachevski.connection.ConnectionManager;
 import karpachevski.interfaces.SuperEntityInterface;
 import karpachevski.model.Document;
+import karpachevski.model.Person;
 import karpachevski.model.SuperEntity;
 import karpachevski.model.Task;
 import karpachevski.interfaces.*;
@@ -37,6 +38,16 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 				+ "') RETURNING task_id");
 		results.next();
 		task.setId(results.getLong(1));
+		
+		
+		Collection tasks = tsk.getTasksToDo();
+		for (Object item : tasks) {
+			Task taskSecondary = (Task) item;
+			statement.executeUpdate("INSERT INTO task_task values('" 
+					+ task.getId() + "', '" + taskSecondary.getId() 
+					+ "')");
+		}
+		
 		statement.close();
 		statement = null;
 	}
@@ -60,6 +71,20 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 				+ "' " 
 				+ "WHERE task_id =" + tsk.getId());
 
+		
+		statement.executeUpdate("DELETE FROM task_task WHERE task_task.task_id_main = " + task.getId() + " OR task_task.task_id_secondary = " + task.getId());
+		
+		
+		Collection tasks = tsk.getTasksToDo();
+		for (Object item : tasks) {
+		Task taskSecondary = (Task) item;
+		statement.executeUpdate("INSERT INTO task_task values('" 
+				+ task.getId() + "', '" + taskSecondary.getId() 
+				+ "')");
+		
+		}
+		
+		
 		statement.close();
 		statement = null;
 	}
@@ -140,10 +165,45 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 	}
 
 	@Override
-	public Collection getListForEntity(SuperEntity obj) throws SQLException,
-			ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection getListForEntity(SuperEntity obj) throws SQLException, ClassNotFoundException {
+		Collection tasks = null;
+		tasks = new ArrayList();
+		
+		Connection connection = null;
+		connection = ConnectionManager.getConnection();
+
+		Statement statement = connection.createStatement();
+		
+		ResultSet results = null;
+		if (obj.getClass().equals(Class.forName("karpachevski.model.Task"))) {
+			results = statement.executeQuery("select task.task_id, task.title " +
+							"FROM task RIGHT JOIN task_task " +
+							"ON task_task.task_id_main = task.task_id " +
+							"WHERE task_id = " + obj.getId());
+		}
+		else
+			if (obj.getClass().equals(Class.forName("karpachevski.model.Student"))) {
+				results = statement.executeQuery("select task.task_id, task.title " +
+					"FROM task RIGHT JOIN student_task " +
+					"ON student_task.task_id = task.task_id " +
+					"WHERE student_task.student_id = " + obj.getId());
+			}
+		
+		ResultSetMetaData rsmd = results.getMetaData();
+		while(results.next())
+		{
+			Task tmp = new Task();
+			tmp.setId(results.getLong(1));
+			tmp.setTitle(results.getString(2));
+			
+			tasks.add(tmp);
+		}
+		results.close();
+
+		statement.close();
+		statement = null;
+		
+		return tasks;
 	}
 	
 }

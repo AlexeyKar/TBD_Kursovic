@@ -14,11 +14,11 @@ public class Student extends Person {
 	private Calendar dateOfAdmission; // дата поступления
 	private Calendar dateOfPlanDiss; // планируемая дата защиты 
 	private Calendar dateOfFactDiss; // дата фактической защиты
-	private ArrayList<Task> tasks; // список задач
+	private Collection tasks; // список задач
 	private String nameOfDiss; // название диссертации
 	private String codeOfDiss; // шифр диссертационного совета
 	private Person supervisor; // научный руководитель
-	private ArrayList<Person> opponents; // оппоненты
+	private Collection opponents; // оппоненты
 	private String organization; // ведущая организация
 
 	public Student() {
@@ -27,8 +27,8 @@ public class Student extends Person {
 	
 	public Student(String name, String surname, String middleName, 
 			Status status, Calendar dateOfAdmission, Calendar dateOfPlanDiss, 
-			Calendar dateOfFactDiss, ArrayList<Task> tasks, String nameOfDiss, 
-			String codeOfDiss, Person supervisor, ArrayList<Person> opponents, String organization) {
+			Calendar dateOfFactDiss, Collection tasks, String nameOfDiss, 
+			String codeOfDiss, Person supervisor,Collection opponents, String organization) {
 		
 		super(name, surname, middleName);
 		this.status = status;
@@ -75,11 +75,11 @@ public class Student extends Person {
 		this.dateOfFactDiss = dateOfFactDiss;
 	}
 
-	public ArrayList<Task> getTasks() {
+	public Collection getTasks() {
 		return tasks;
 	}
 
-	public void setTasks(ArrayList<Task> tasks) {
+	public void setTasks(Collection tasks) {
 		this.tasks = tasks;
 	}
 
@@ -107,11 +107,11 @@ public class Student extends Person {
 		this.supervisor = supervisor;
 	}
 
-	public ArrayList<Person> getOpponents() {
+	public Collection getOpponents() {
 		return opponents;
 	}
 
-	public void setOpponents(ArrayList<Person> opponents) {
+	public void setOpponents(Collection opponents) {
 		this.opponents = opponents;
 	}
 

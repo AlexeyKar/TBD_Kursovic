@@ -29,6 +29,7 @@ public class EditTaskWindow extends EditWindow {
 
 	private Task task;
 	private Collection documentList;
+	private Collection taskList;
 	
 	private JTextField titleFld; // поле ввода "название задания" 
 	private DateField dateOfStartPlanFld; // поле ввода "планируемое время окончания задачи"
@@ -38,12 +39,13 @@ public class EditTaskWindow extends EditWindow {
 	private JTextField durrationFld; // поле ввода "планируемая продолжительность"
 	private JTextField complishionFld; // поле ввода "процент выполения задачи"
 	private JComboBox documentFld; // поле ввода "документ подтверждающий выполнение"
-	private JComboBox tasksToDoFld; // поле ввода "список предварительных задач"
+	private TaskField tasksToDoFld; // поле ввода "список предварительных задач"
 	
-	public EditTaskWindow(JFrame parent, Task task, Collection documentList) {
+	public EditTaskWindow(JFrame parent, Task task, Collection documentList, Collection taskList) {
 		super(parent);
 		this.task = task;
 		this.documentList = documentList;
+		this.taskList = taskList;
 		addComponentsToPane(getContentPane());
 		fillFields();
 		pack();
@@ -79,7 +81,7 @@ public class EditTaskWindow extends EditWindow {
 		durrationFld = new JTextField();
 		complishionFld = new JTextField();
 		documentFld = new JComboBox(documentList.toArray());
-		tasksToDoFld = new JComboBox();
+		tasksToDoFld = new TaskField(taskList);
 		
 		c.gridx = 1;
 		c.gridy = 0;
@@ -135,7 +137,7 @@ public class EditTaskWindow extends EditWindow {
 		durrationFld.setText(String.valueOf(task.getDurration()));
 		complishionFld.setText(String.valueOf(task.getComplishion()));
 		documentFld.setSelectedItem(task.getDocument());
-		//tasksToDoFld.setSelectedItem(task.getTasksToDo());
+		tasksToDoFld.setTasks(task.getTasksToDo());
 	}
 	
 	@Override
@@ -148,7 +150,7 @@ public class EditTaskWindow extends EditWindow {
 		task.setDurration(Integer.valueOf(durrationFld.getText()));
 		task.setComplishion(Integer.valueOf(complishionFld.getText()));
 		task.setDocument((Document)documentFld.getSelectedItem());
-		//task.setTasksToDo(tasksToDoFld.getSelectedItem()));
+		task.setTasksToDo(tasksToDoFld.getTasks());
 		
 		return task;
 	}

@@ -1,6 +1,5 @@
 package karpachevski.model;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.*;
 
@@ -18,7 +17,7 @@ public class Task extends SuperEntity {
 	private Integer durration; // планируемая продолжительность
 	private Integer complishion; // процент выполения задачи
 	private Document document; // документ подтверждающий выполнение
-	private ArrayList<Task> tasksToDo; // список предварительных задач
+	private Collection tasksToDo; // список предварительных задач
 	
 	public Task() {
 		super();
@@ -27,7 +26,7 @@ public class Task extends SuperEntity {
 	public Task(String title, Calendar dateOfStartPlan,
 			Calendar dateOfStartFact, Calendar dateOfFinishPlan,
 			Calendar dateOfFinishFact, Integer durration, Integer complishion,
-			Document document, ArrayList<Task> tasksToDo) {
+			Document document, Collection tasksToDo) {
 		super();
 		this.title = title;
 		this.dateOfStartPlan = dateOfStartPlan;
@@ -104,11 +103,11 @@ public class Task extends SuperEntity {
 		this.document = document;
 	}
 
-	public ArrayList<Task> getTasksToDo() {
+	public Collection getTasksToDo() {
 		return tasksToDo;
 	}
 
-	public void setTasksToDo(ArrayList<Task> tasksToDo) {
+	public void setTasksToDo(Collection tasksToDo) {
 		this.tasksToDo = tasksToDo;
 	}
 

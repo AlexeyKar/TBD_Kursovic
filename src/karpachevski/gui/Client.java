@@ -257,6 +257,7 @@ public class Client extends JFrame {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			studentTableModel.addEntity(newItem);
 		}
@@ -266,6 +267,16 @@ public class Client extends JFrame {
 	
 	private void actionEditStudent() {
 		Student selectedStudent = (Student)studentTableModel.getEntity(studentList.getSelectedRow());
+		try {
+			selectedStudent.setOpponents(Factory.getInstance().getPersonInterface().getListForEntity(selectedStudent));
+			selectedStudent.setTasks(Factory.getInstance().getTaskInterface().getListForEntity(selectedStudent));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (selectedStudent != null) {
 			EditWindow editWindow = new EditStudentWindow(this, selectedStudent, taskTableModel.getEntities(), statusArray, personArray);
 			editWindow.setVisible(true);
@@ -274,9 +285,11 @@ public class Client extends JFrame {
 					Factory.getInstance().getStudentInterface().update((Student)editWindow.getObject());
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно редактировать аспиранта.", JOptionPane.ERROR_MESSAGE);
+					return;
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return;
 				}
 				studentTableModel.updateEntity(studentList.getSelectedRow());
 			}
@@ -298,6 +311,7 @@ public class Client extends JFrame {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			studentTableModel.deleteEntity(studentList.getSelectedRow());
 		}
@@ -306,7 +320,7 @@ public class Client extends JFrame {
 	}
 	
 	private void actionAddTask() {
-		EditWindow editWindow = new EditTaskWindow(this, new Task(), documentTableModel.getEntities());
+		EditWindow editWindow = new EditTaskWindow(this, new Task(), documentTableModel.getEntities(), taskTableModel.getEntities());
 		editWindow.setVisible(true);
 		if (!editWindow.isCanceled()) {
 			Task newItem = (Task)editWindow.getObject();
@@ -314,9 +328,11 @@ public class Client extends JFrame {
 				Factory.getInstance().getTaskInterface().add(newItem);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно добавить задание.", JOptionPane.ERROR_MESSAGE);
+				return;
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			taskTableModel.addEntity(newItem);
 		}
@@ -326,17 +342,28 @@ public class Client extends JFrame {
 	
 	private void actionEditTask() {
 		Task selectedTask = (Task) taskTableModel.getEntity(taskList.getSelectedRow());
+		try {
+			selectedTask.setTasksToDo(Factory.getInstance().getTaskInterface().getListForEntity(selectedTask));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (selectedTask != null) {
-			EditWindow editWindow = new EditTaskWindow(this, selectedTask, documentTableModel.getEntities());
+			EditWindow editWindow = new EditTaskWindow(this, selectedTask, documentTableModel.getEntities(), taskTableModel.getEntities());
 			editWindow.setVisible(true);
 			if (!editWindow.isCanceled()) {
 				try {
 					Factory.getInstance().getTaskInterface().update((Task)editWindow.getObject());
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно редактировать задание.", JOptionPane.ERROR_MESSAGE);
+					return;
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return;
 				}
 				taskTableModel.updateEntity(taskList.getSelectedRow());
 			}
@@ -358,6 +385,7 @@ public class Client extends JFrame {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			taskTableModel.deleteEntity(taskList.getSelectedRow());
 		}
@@ -374,9 +402,11 @@ public class Client extends JFrame {
 				Factory.getInstance().getDocumentInterface().add(newItem);
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно добавить документ.", JOptionPane.ERROR_MESSAGE);
+				return;
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			documentTableModel.addEntity(newItem);
 		}
@@ -387,7 +417,7 @@ public class Client extends JFrame {
 	private void actionEditDocument() {
 		Document selectedDocument = (Document) documentTableModel.getEntity(documentList.getSelectedRow());
 		try {
-			selectedDocument.setListOfSign(Factory.getInstance().getDocumentInterface().getListForEntity(selectedDocument));
+			selectedDocument.setListOfSign(Factory.getInstance().getPersonInterface().getListForEntity(selectedDocument));
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -403,9 +433,11 @@ public class Client extends JFrame {
 					Factory.getInstance().getDocumentInterface().update((Document)editWindow.getObject());
 				} catch (SQLException e) {
 					JOptionPane.showMessageDialog(this, e, "Ошибка доступа к бд. Невозможно редактировать документ.", JOptionPane.ERROR_MESSAGE);
+					return;
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return;
 				}
 				documentTableModel.updateEntity(documentList.getSelectedRow());
 			}
@@ -427,6 +459,7 @@ public class Client extends JFrame {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			documentTableModel.deleteEntity(documentList.getSelectedRow());
 		}

@@ -65,6 +65,18 @@ public class DocumentInterfaceImpl implements SuperEntityInterface {
 		statement.executeUpdate("UPDATE document SET name = '" + doc.getTitle() + "', dateOfSupply = '" 
 				+ doc.getDateOfSupply().getTime() 
 				+ "' " + "WHERE  document_id = " + doc.getId());
+		
+		statement.executeUpdate("DELETE FROM document_cleverpeople WHERE document_cleverpeople.document_id = " + document.getId());
+		
+		
+		Collection persons = doc.getListOfSign();
+		for (Object item : persons) {
+		Person person = (Person) item;
+		statement.executeUpdate("INSERT INTO document_cleverpeople values('" 
+				+ document.getId() + "', '" + person.getId() 
+				+ "')");
+		
+		}
 
 		statement.close();
 		statement = null;
@@ -117,36 +129,8 @@ public class DocumentInterfaceImpl implements SuperEntityInterface {
 	}
 
 	public Collection getListForEntity(SuperEntity document) throws ClassNotFoundException, SQLException {
-		Collection persons = null;
-		persons = new ArrayList();
 		
-		Connection connection = null;
-		connection = ConnectionManager.getConnection();
-
-		Statement statement = connection.createStatement();
-		
-		ResultSet results = statement.executeQuery("select cleverpeople.cleverpeople_id, cleverpeople.name, " +
-						"cleverpeople.surname, cleverpeople.middlename " +
-						"FROM cleverpeople RIGHT JOIN document_cleverpeople " +
-						"ON document_cleverpeople.cleverpeople_id = cleverpeople.cleverpeople_id " +
-						"WHERE document_id = " + document.getId());
-		ResultSetMetaData rsmd = results.getMetaData();
-		while(results.next())
-		{
-			Person tmp = new Person();
-			tmp.setId(results.getLong(1));
-			tmp.setName(results.getString(2));
-			tmp.setSurname(results.getString(3));
-			tmp.setMiddleName(results.getString(4));
-
-			persons.add(tmp);
-		}
-		results.close();
-
-		statement.close();
-		statement = null;
-		
-		return persons;
+		return null;
 	}
 
 }
