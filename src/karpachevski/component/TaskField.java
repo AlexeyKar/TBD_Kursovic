@@ -70,7 +70,10 @@ public class TaskField extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (getTask() != null) {
-					taskTableModel.addEntity(getTask());
+					if (!taskTableModel.containsEntity(getTask()))
+						taskTableModel.addEntity(getTask());
+					else 
+						return;
 				}
 			}
 			

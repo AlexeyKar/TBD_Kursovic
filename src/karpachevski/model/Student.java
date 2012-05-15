@@ -11,6 +11,7 @@ import java.util.*;
 public class Student extends Person {
 
 	private Status status;  // статус
+	private int degree; // Докторант или Аспирант
 	private Calendar dateOfAdmission; // дата поступления
 	private Calendar dateOfPlanDiss; // планируемая дата защиты 
 	private Calendar dateOfFactDiss; // дата фактической защиты
@@ -23,15 +24,17 @@ public class Student extends Person {
 
 	public Student() {
 		super();
+		degree = 0;
 	}
 	
 	public Student(String name, String surname, String middleName, 
-			Status status, Calendar dateOfAdmission, Calendar dateOfPlanDiss, 
+			Status status, int degree, Calendar dateOfAdmission, Calendar dateOfPlanDiss, 
 			Calendar dateOfFactDiss, Collection tasks, String nameOfDiss, 
 			String codeOfDiss, Person supervisor,Collection opponents, String organization) {
 		
 		super(name, surname, middleName);
 		this.status = status;
+		this.degree = degree;
 		this.dateOfAdmission = dateOfAdmission;
 		this.dateOfPlanDiss = dateOfPlanDiss;
 		this.dateOfFactDiss = dateOfFactDiss;
@@ -49,6 +52,14 @@ public class Student extends Person {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public int getDegree() {
+		return degree;
+	}
+
+	public void setDegree(int degree) {
+		this.degree = degree;
 	}
 
 	public Calendar getDateOfAdmission() {

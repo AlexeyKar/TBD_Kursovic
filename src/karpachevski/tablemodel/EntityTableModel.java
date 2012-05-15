@@ -35,6 +35,14 @@ public abstract class EntityTableModel extends AbstractTableModel {
 		return (SuperEntity)entityList.get(row); 
 	}
 	
+	public boolean containsEntity(SuperEntity entity) {
+		boolean result = true;
+		if (entityList.contains(entity))		
+			return result;
+		else 
+			return !result;
+	}
+	
 	public void updateEntity(int row) {
 		fireTableRowsUpdated(row,row);
 	}

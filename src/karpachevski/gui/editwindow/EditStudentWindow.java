@@ -35,6 +35,7 @@ public class EditStudentWindow extends EditWindow {
 	private JTextField surnameFld;
 	private JTextField middleNameFld;
 	private JComboBox statusFld;
+	private JComboBox degreeFld;
 	private DateField dateOfAdmissionFld;
 	private DateField dateOfPlanDissFld;
 	private DateField dateOfFactDissFld;
@@ -64,10 +65,11 @@ public class EditStudentWindow extends EditWindow {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(3,3,3,3);
 		
-		String[] properties = {"Имя: ", "Фамилия: ", "Отчество: ", "Статус: ", "Дата поступления: ", 
+		String[] properties = {"Имя: ", "Фамилия: ", "Отчество: ", "Статус: ", "Степень", "Дата поступления: ", 
 				"План. срок защиты: ", "Факт. срок защиты: ",
 				"Список задач: ", "Тема диссертации: ", "Шифр дисс. совета: ",
 				"Научный руководитель: ", "Оппоненты: ", "Ведущая организация: "};
+		String[] degreeValue = {"Аспирант", "Докторант"};
 
 		for(int i = 0; i < properties.length; i++) {
 
@@ -83,6 +85,7 @@ public class EditStudentWindow extends EditWindow {
 		middleNameFld = new JTextField(10);
 		statusFld = new JComboBox(statusList.toArray());
 		statusFld.setEditable(true);
+		degreeFld = new JComboBox(degreeValue);
 		dateOfAdmissionFld = new DateField();
 		dateOfPlanDissFld = new DateField();
 		dateOfFactDissFld = new DateField();
@@ -113,41 +116,45 @@ public class EditStudentWindow extends EditWindow {
 		c.gridx = 1;
 		c.gridy = 4;
 		c.weightx = 1;
-		lblAndFldPanel.add(dateOfAdmissionFld,c);
+		lblAndFldPanel.add(degreeFld,c);
 		c.gridx = 1;
 		c.gridy = 5;
 		c.weightx = 1;
-		lblAndFldPanel.add(dateOfPlanDissFld,c);
+		lblAndFldPanel.add(dateOfAdmissionFld,c);
 		c.gridx = 1;
 		c.gridy = 6;
 		c.weightx = 1;
-		lblAndFldPanel.add(dateOfFactDissFld,c);
+		lblAndFldPanel.add(dateOfPlanDissFld,c);
 		c.gridx = 1;
 		c.gridy = 7;
 		c.weightx = 1;
-		lblAndFldPanel.add(taskFld,c);
+		lblAndFldPanel.add(dateOfFactDissFld,c);
 		c.gridx = 1;
 		c.gridy = 8;
 		c.weightx = 1;
-		lblAndFldPanel.add(nameOfDissFld,c);
+		lblAndFldPanel.add(taskFld,c);
 		c.gridx = 1;
 		c.gridy = 9;
 		c.weightx = 1;
-		lblAndFldPanel.add(codeOfDissFld,c);
+		lblAndFldPanel.add(nameOfDissFld,c);
 		c.gridx = 1;
 		c.gridy = 10;
 		c.weightx = 1;
-		lblAndFldPanel.add(supervisorFld,c);
+		lblAndFldPanel.add(codeOfDissFld,c);
 		c.gridx = 1;
 		c.gridy = 11;
 		c.weightx = 1;
-		lblAndFldPanel.add(opponentsFld,c);
+		lblAndFldPanel.add(supervisorFld,c);
 		c.gridx = 1;
 		c.gridy = 12;
 		c.weightx = 1;
+		lblAndFldPanel.add(opponentsFld,c);
+		c.gridx = 1;
+		c.gridy = 13;
+		c.weightx = 1;
 		lblAndFldPanel.add(organizationFld,c);
 		c.gridx = 0;
-		c.gridy = 13;
+		c.gridy = 14;
 		c.gridwidth = 2;
 		c.weightx = 1;
 		lblAndFldPanel.add(new JSeparator(SwingConstants.HORIZONTAL),c);
@@ -160,6 +167,7 @@ public class EditStudentWindow extends EditWindow {
 		surnameFld.setText(student.getSurname());
 		middleNameFld.setText(student.getMiddleName());
 		statusFld.setSelectedItem(student.getStatus());
+		degreeFld.setSelectedIndex(student.getDegree());
 		dateOfAdmissionFld.setDate(student.getDateOfAdmission());
 		dateOfPlanDissFld.setDate(student.getDateOfPlanDiss());
 		dateOfFactDissFld.setDate(student.getDateOfFactDiss());
@@ -188,6 +196,7 @@ public class EditStudentWindow extends EditWindow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		student.setDegree(degreeFld.getSelectedIndex());
 		student.setDateOfAdmission(dateOfAdmissionFld.getDate());
 		student.setDateOfPlanDiss(dateOfPlanDissFld.getDate());
 		student.setDateOfFactDiss(dateOfFactDissFld.getDate());

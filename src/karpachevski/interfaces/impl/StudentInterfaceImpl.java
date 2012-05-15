@@ -53,10 +53,10 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 		}
 		
 		results = statement.executeQuery("INSERT INTO student (name, surname, middlename, " +
-				"status_id, dateOfAdmission, dateOfPlanDiss, " +
+				"status_id, degree, dateOfAdmission, dateOfPlanDiss, " +
 				"dateOfFactDiss, nameOfDiss, codeOfDiss, cleverpeople_id, " +
 				"organization) values('" + stud.getName() + "', '" + stud.getSurname() + "', '" 
-				+ stud.getMiddleName() + "', '" + stud.getStatus().getId() + "', '" 
+				+ stud.getMiddleName() + "', '" + stud.getStatus().getId() + "', '" + stud.getDegree() + "', '"
 				+ stud.getDateOfAdmission().getTime() + "', '" + stud.getDateOfPlanDiss().getTime() + "', '" 
 				+ stud.getDateOfFactDiss().getTime() + "', '" + stud.getNameOfDiss() + "', '"
 				+ stud.getCodeOfDiss() + "', '" + stud.getSupervisor().getId() + "', '"
@@ -116,6 +116,7 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 				+ "', surname = '" + stud.getSurname()
 				+ "', middleName = '" + stud.getMiddleName()
 				+ "', status_id = '" + stud.getStatus().getId()
+				+ "', degree = '" + stud.getDegree()
 				+ "', dateOfAdmission = '" + stud.getDateOfAdmission().getTime()
 				+ "', dateOfPlanDiss = '" + stud.getDateOfPlanDiss().getTime() 
 				+ "', dateOfFactDiss = '" + stud.getDateOfFactDiss().getTime()
@@ -194,7 +195,7 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 			tmp.setName(results.getString(2));
 			tmp.setSurname(results.getString(3));
 			tmp.setMiddleName(results.getString(4));
-			//tmp.setDegree(results.getInt(5));
+			tmp.setDegree(results.getInt(5));
 			
 			Status status = new Status(results.getString(6));
 			status.setId(results.getLong(7));

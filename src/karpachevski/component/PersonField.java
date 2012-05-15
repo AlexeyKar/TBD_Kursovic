@@ -83,7 +83,10 @@ public class PersonField extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (getPerson() != null) { 
-						personTableModel.addEntity(getPerson());
+						if (!personTableModel.containsEntity(getPerson())) 
+							personTableModel.addEntity(getPerson());
+						else 
+							return;
 					}
 				}
 				
