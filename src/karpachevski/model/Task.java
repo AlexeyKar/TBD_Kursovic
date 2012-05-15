@@ -21,6 +21,8 @@ public class Task extends SuperEntity {
 	
 	public Task() {
 		super();
+		durration = 0; // планируемая продолжительность
+		complishion = 0;
 	}
 	
 	public Task(String title, Calendar dateOfStartPlan,

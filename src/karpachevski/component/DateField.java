@@ -31,9 +31,12 @@ public class DateField extends JPanel {
 		JLabel monthLbl = new JLabel(properties[1]);
 		JLabel yearLbl = new JLabel(properties[2]);
 
-		dayFld = new JSpinner();
-		monthFld  = new JSpinner();
-		yearFld  = new JSpinner();
+		SpinnerModel daySpinModel = new SpinnerNumberModel(0,0,31,1);
+		SpinnerModel monthSpinModel = new SpinnerNumberModel(0,0,11,1); 
+		SpinnerModel yearSpinModel = new SpinnerNumberModel(1950,0,2100,1); 
+		dayFld = new JSpinner(daySpinModel);
+		monthFld  = new JSpinner(monthSpinModel);
+		yearFld  = new JSpinner(yearSpinModel);
 
 		c.gridx = 0;
 		c.gridy = 0;
@@ -61,15 +64,10 @@ public class DateField extends JPanel {
 	}
 	
 	public void setDate(Calendar calendar) {
-
 		if (calendar != null) {
 			dayFld.setValue(calendar.get(Calendar.DAY_OF_MONTH));
 			monthFld.setValue(calendar.get(Calendar.MONTH));
 			yearFld.setValue(calendar.get(Calendar.YEAR));
-		} else {
-			dayFld.setValue(1);
-			monthFld.setValue(1);
-			yearFld.setValue(1950);
 		}
 	}
 	

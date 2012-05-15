@@ -170,7 +170,10 @@ public class EditTaskWindow extends EditWindow {
 			return;
 		}
 		try {
-			Integer.valueOf(complishionFld.getText());
+			if (Integer.valueOf(complishionFld.getText()) > 100) {
+				JOptionPane.showMessageDialog(this, "Процент выполнения должен быть меньшее 100", "Неверное значение!", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 		catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Процент выполнения - это целочисленное значение", "Неверное значение!", JOptionPane.ERROR_MESSAGE);

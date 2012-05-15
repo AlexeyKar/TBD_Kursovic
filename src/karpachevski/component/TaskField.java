@@ -69,7 +69,9 @@ public class TaskField extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				taskTableModel.addEntity(getTask());	
+				if (getTask() != null) {
+					taskTableModel.addEntity(getTask());
+				}
 			}
 			
 		});
@@ -137,28 +139,27 @@ public class TaskField extends JPanel {
 	public void setTasks(Collection tasks) {
 		if (tasks != null) {
 			taskTableModel.setEntities(tasks.toArray());
-			setTask();
+
 		}
 	}
 	
 	public Task getTask() {
 		try {
-			if (taskFld.getSelectedItem().getClass().equals(Class.forName("karpachevski.model.Task"))) {
-				return (Task)taskFld.getSelectedItem();
+			if (taskFld.getSelectedItem() != null) { 
+				if (taskFld.getSelectedItem().getClass().equals(Class.forName("karpachevski.model.Task"))) {
+					return (Task)taskFld.getSelectedItem();
+				}
 			}
 
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		return new Task();		
+		return null;		
 	}
 	
 	public Collection getTasks() {
 		return taskTableModel.getEntities();
 	}
 	
-	public void setTask() {
-		taskFld.setSelectedIndex(1);
-	}
 }

@@ -29,16 +29,20 @@ public class TaskInterfaceImpl implements SuperEntityInterface {
 
 		Statement statement = connection.createStatement();
 		
+		long docId;
+		if (tsk.getDocument()!= null) 
+			docId = tsk.getDocument().getId();
+		else docId = 0;
+		
 		ResultSet results = statement.executeQuery("INSERT INTO task (title, dateofstartplan, dateofstartfact, " 
 				+ "dateoffinishplan, dateoffinishfact, durration, complishion, document_id) values('" 
 				+ tsk.getTitle() + "', '" + tsk.getDateOfStartPlan().getTime() + "', '" 
 				+ tsk.getDateOfStartFact().getTime() + "', '" + tsk.getDateOfFinishPlan().getTime() + "', '" 
 				+ tsk.getDateOfFinishFact().getTime() + "', '" + tsk.getDurration() + "', '" 
-				+ tsk.getComplishion() + "', '" + tsk.getDocument().getId() 
+				+ tsk.getComplishion() + "', '" + docId 
 				+ "') RETURNING task_id");
 		results.next();
 		task.setId(results.getLong(1));
-		
 		
 		Collection tasks = tsk.getTasksToDo();
 		for (Object item : tasks) {

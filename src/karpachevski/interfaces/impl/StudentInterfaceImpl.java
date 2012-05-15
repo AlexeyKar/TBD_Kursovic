@@ -43,6 +43,15 @@ public class StudentInterfaceImpl implements SuperEntityInterface {
 			status.setId(results.getLong(1));
 		}
 		
+		Person supervisor = stud.getSupervisor();
+		if (supervisor.getId() == -1) {
+			results = statement.executeQuery("INSERT INTO cleverpeople (name, surname, middlename) values('" 
+					+ supervisor.getName() + "', " + supervisor.getSurname() + "', " + supervisor.getMiddleName()
+					+ "') RETURNING status_id ");
+			results.next();
+			supervisor.setId(results.getLong(1));
+		}
+		
 		results = statement.executeQuery("INSERT INTO student (name, surname, middlename, " +
 				"status_id, dateOfAdmission, dateOfPlanDiss, " +
 				"dateOfFactDiss, nameOfDiss, codeOfDiss, cleverpeople_id, " +

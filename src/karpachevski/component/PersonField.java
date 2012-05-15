@@ -56,7 +56,7 @@ public class PersonField extends JPanel {
 			else
 				fioFld = new JComboBox();
 		
-		
+		fioFld.setEditable(true);
 
 		c.gridx = 0;
 		c.gridy = 0;
@@ -76,13 +76,15 @@ public class PersonField extends JPanel {
 		add(fioFld,c);
 		
 		if (!single) {
-			fioFld.setEditable(true);
+
 			JButton addBtn = new JButton("+");
 			addBtn.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					personTableModel.addEntity(getPerson());	
+					if (getPerson() != null) { 
+						personTableModel.addEntity(getPerson());
+					}
 				}
 				
 			});
@@ -169,26 +171,27 @@ public class PersonField extends JPanel {
 	
 	public Person getPerson() {
 		try {
-			if (fioFld.getSelectedItem().getClass().equals(Class.forName("karpachevski.model.Person"))) {
-				return (Person)fioFld.getSelectedItem();
-			}
-			else  {
-				String[] str = fioFld.getSelectedItem().toString().split(" ");
-				if (str.length > 2) 
-					return new Person(str[0],str[1],str[2]);
-				else
-					if (str.length == 2) 
-						return new Person(str[0],str[1], "");
-					else 
-						if (str.length == 1) 
+			if (fioFld.getSelectedItem() != null ) {
+				if (fioFld.getSelectedItem().getClass().equals(Class.forName("karpachevski.model.Person"))) {
+					return (Person)fioFld.getSelectedItem();
+				}
+				else  {
+					String[] str = fioFld.getSelectedItem().toString().split(" ");
+					if (str.length > 2) 
+						return new Person(str[0],str[1],str[2]);
+					else
+						if (str.length == 2) 
+							return new Person(str[0],str[1], "");
+						else 
+							if (str.length == 1) 
 							return new Person(str[0], "", "");
+				}
 			}
-
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		return new Person();		
+		return null;		
 	}
 	
 	public Collection getPersons() {
